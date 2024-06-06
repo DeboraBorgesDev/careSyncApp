@@ -67,7 +67,8 @@ class Login extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Lógica do botão de entrar
+                  // Navegar para a página Home
+                  Navigator.pushReplacementNamed(context, '/home');
                 },
                 child: const Text('Entrar'),
                 style: ElevatedButton.styleFrom(
