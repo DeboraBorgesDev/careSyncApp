@@ -23,7 +23,7 @@ class _AppScaffoldState extends State<AppScaffold> {
       _selectedIndex = index;
       // Navegação com base no índice selecionado
       // Por exemplo:
-      // Navigator.pushNamed(context, routeForIndex(index));
+      Navigator.pushReplacementNamed(context, routeForIndex(index));
     });
   }
 
@@ -67,4 +67,18 @@ class _AppScaffoldState extends State<AppScaffold> {
       ),
     );
   }
+  
+  String routeForIndex(int index) {
+  switch (index) {
+    case 0:
+      return '/home';
+    case 1:
+      return '/registros'; 
+    case 2:
+      return '/registros';
+    default:
+      return '/';
+  }
+}
+
 }

@@ -1,5 +1,6 @@
 import 'package:caresync/login/login.view.dart';
 import 'package:caresync/home/home.view.dart';
+import 'package:caresync/registros/registros.view.dart';
 import 'package:flutter/material.dart';
 
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Login(),
         '/home': (context) => const Home(),
+        '/registros': (context) => const RegistrosPage(),
       },
     );
   }
