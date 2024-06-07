@@ -18,67 +18,43 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Ação para Novo Registro
-              },
-              child: const SizedBox(
-                width: 250,
-                height: 250,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.favorite_outline,
-                      size: 50,
-                      color: Color.fromARGB(255, 25, 225, 175),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Novo Registro',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  ],
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Card(
+              child: InkWell(
+                onTap: () {
+                  // Ação para Novo Registro
+                },
+                child: const SizedBox(
+                  width: 250,
+                  height: 250,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.favorite_outline,
+                        size: 50,
+                        color: Color.fromARGB(255, 25, 225, 175),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        'Novo Registro',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24.0),
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Ação para Últimos Registros
-              },
-              child: const SizedBox(
-                width: 250,
-                height: 250,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.list_alt,
-                      size: 50,
-                      color: Color.fromARGB(255, 25, 225, 175),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Últimos Registros',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
