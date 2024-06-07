@@ -1,67 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:caresync/components/AppScaffold/app_scaffould.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeContent(),
-    Text(
-      'Index 1: Business',
-      style: TextStyle(fontSize: 24, color: Colors.black),
-    ),
-    Text(
-      'Index 2: School',
-      style: TextStyle(fontSize: 24, color: Colors.black),
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 25, 225, 175),
-        title: Center(
-          child: Image.asset(
-            'assets/logo.png',
-            height: 20.0,
-          ),
-        ),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.monitor_heart_outlined),
-            label: ' Últimos registros',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 25, 225, 175),
-        onTap: _onItemTapped,
-      ),
+    return const AppScaffold(
+      selectedIndex: 0,
+      body: HomeContent(),
     );
   }
 }
@@ -87,7 +34,7 @@ class HomeContent extends StatelessWidget {
                 height: 250,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
+                  children: [
                     Icon(
                       Icons.favorite_outline,
                       size: 50,
@@ -96,6 +43,33 @@ class HomeContent extends StatelessWidget {
                     SizedBox(height: 16.0),
                     Text(
                       'Novo Registro',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24.0),
+          Card(
+            child: InkWell(
+              onTap: () {
+                // Ação para Últimos Registros
+              },
+              child: const SizedBox(
+                width: 250,
+                height: 250,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.list_alt,
+                      size: 50,
+                      color: Color.fromARGB(255, 25, 225, 175),
+                    ),
+                    SizedBox(height: 16.0),
+                    Text(
+                      'Últimos Registros',
                       style: TextStyle(fontSize: 24),
                     ),
                   ],
