@@ -44,18 +44,18 @@ class _HomeState extends State<Home> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.home_outlined),
+            label: 'Início',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.monitor_heart_outlined),
+            label: ' Últimos registros',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.person_outline),
+            label: 'Perfil',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -102,34 +102,6 @@ class HomeContent extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24.0),
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Ação para Últimos Registros
-              },
-              child: const SizedBox(
-                width: 250,
-                height: 250,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.list_alt,
-                      size: 50,
-                      color:  Color.fromARGB(255, 25, 225, 175),
-                    ),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Últimos Registros',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
           ),
         ],
       ),
