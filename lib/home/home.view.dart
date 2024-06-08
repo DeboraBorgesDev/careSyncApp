@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:caresync/components/AppScaffold/app_scaffould.dart';
 
+import '../novoRegistro/novo_registro_page.dart';
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -28,7 +30,10 @@ class HomeContent extends StatelessWidget {
             Card(
               child: InkWell(
                 onTap: () {
-                  // Ação para Novo Registro
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NovoRegistroPage()),
+                  );
                 },
                 child: const SizedBox(
                   width: 250,
@@ -57,4 +62,3 @@ class HomeContent extends StatelessWidget {
     );
   }
 }
-
