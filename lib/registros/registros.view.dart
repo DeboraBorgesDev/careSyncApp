@@ -8,8 +8,7 @@ class RegistrosPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const AppScaffold(
       selectedIndex: 1,
-       body: RegistrosContent(),
-
+      body: RegistrosContent(),
     );
   }
 }
@@ -19,7 +18,6 @@ class RegistrosContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Exemplo de dados
     final List<Map<String, dynamic>> registros = [
       {
         'nomePaciente': 'João Silva',
@@ -28,6 +26,13 @@ class RegistrosContent extends StatelessWidget {
           {'descricao': 'Pressão Arterial', 'resultado': '120/80 mmHg'},
           {'descricao': 'Frequência Cardíaca', 'resultado': '70 bpm'},
           {'descricao': 'Temperatura', 'resultado': '36.5 ºC'},
+          {'descricao': 'Frequência Respiratória', 'resultado': '16 rpm'},
+          {'descricao': 'Oxigenação', 'resultado': '98%'},
+          {'descricao': 'Glicemia', 'resultado': '90 mg/dL'},
+          {'descricao': 'Peso', 'resultado': '70 kg'},
+          {'descricao': 'Constipação e/ou Incontinência Fecal/Urinária', 'resultado': 'Nenhuma'},
+          {'descricao': 'Mobilidade', 'resultado': 'Independente'},
+          {'descricao': 'Observações', 'resultado': 'Paciente estável'},
         ],
       },
       {
@@ -37,9 +42,15 @@ class RegistrosContent extends StatelessWidget {
           {'descricao': 'Pressão Arterial', 'resultado': '130/85 mmHg'},
           {'descricao': 'Frequência Cardíaca', 'resultado': '75 bpm'},
           {'descricao': 'Temperatura', 'resultado': '36.7 ºC'},
+          {'descricao': 'Frequência Respiratória', 'resultado': '18 rpm'},
+          {'descricao': 'Oxigenação', 'resultado': '97%'},
+          {'descricao': 'Glicemia', 'resultado': '100 mg/dL'},
+          {'descricao': 'Peso', 'resultado': '65 kg'},
+          {'descricao': 'Constipação e/ou Incontinência Fecal/Urinária', 'resultado': 'Nenhuma'},
+          {'descricao': 'Mobilidade', 'resultado': 'Auxílio para caminhar'},
+          {'descricao': 'Observações', 'resultado': 'Paciente com leve dor nas pernas'},
         ],
       },
-      // Adicione mais registros conforme necessário
     ];
 
     return Scaffold(
@@ -79,9 +90,11 @@ class _RegistroCardState extends State<RegistroCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Paciente: ${widget.registro['nomePaciente']}',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Expanded(
+                  child: Text(
+                    'Paciente: ${widget.registro['nomePaciente']}',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Text(
                   widget.registro['dataHora'],
@@ -93,8 +106,8 @@ class _RegistroCardState extends State<RegistroCard> {
               ...widget.registro['sinaisVitais'].map<Widget>((sinal) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         sinal['descricao'],
@@ -120,8 +133,7 @@ class _RegistroCardState extends State<RegistroCard> {
                   child: Text(
                     _isExpanded ? 'Ver menos' : 'Ver mais',
                     style: const TextStyle(color: Color.fromARGB(255, 25, 225, 175)),
-                    ),
-                  
+                  ),
                 ),
                 FloatingActionButton(
                   onPressed: () {
