@@ -34,7 +34,16 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: 'Selecionar Paciente',
-                  border: OutlineInputBorder(),
+                  // Definir a cor da borda
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey), // Cor da borda cinza
+
+                  ),
+                  // Definir a cor do texto do rótulo
+                  labelStyle: TextStyle(color: Colors.grey),
                 ),
                 value: _selectedPaciente,
                 items: widget.pacientes.map((String paciente) {
@@ -52,13 +61,24 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                 onSaved: widget.onPacienteSelected,
               ),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_selectedPaciente != null) {
-                    widget.onPacienteSelected(_selectedPaciente);
-                  }
-                },
-                child: const Text('Próximo'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_selectedPaciente != null) {
+                      widget.onPacienteSelected(_selectedPaciente);
+                    }
+                  },
+                  child: const Text(
+                    'Próximo',
+                    style: TextStyle(color: Colors.white), // Define a cor do texto como branco
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 25, 225, 175), // Define a cor do botão
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5), // Define os cantos retangulares
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

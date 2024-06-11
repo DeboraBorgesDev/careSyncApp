@@ -10,10 +10,55 @@ class SinaisVitaisInputs extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Registros de Sinais Vitais',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const Row(
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(14.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.account_circle),
+                            SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nome do Paciente',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '06/08/2001',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      'xxx.xxx.xxx.-xx',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16.0),
                 _buildFormFieldWithUnit(context, 'Frequência Cardíaca', 'bpm'),
@@ -22,8 +67,7 @@ class SinaisVitaisInputs extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 _buildFormFieldWithUnit(context, 'Temperatura', '°C'),
                 const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit(
-                    context, 'Frequência Respiratória', 'rpm'),
+                _buildFormFieldWithUnit(context, 'Frequência Respiratória', 'rpm'),
                 const SizedBox(height: 16.0),
                 _buildFormFieldWithUnit(context, 'Oxigenação', '%'),
                 const SizedBox(height: 16.0),
@@ -31,18 +75,27 @@ class SinaisVitaisInputs extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 _buildFormFieldWithUnit(context, 'Peso', 'kg'),
                 const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit(
-                    context, 'Constipação ou Incontinência Fecal/Urinária', ''),
+                _buildFormFieldWithUnit(context, 'Constipação ou Incontinência Fecal/Urinária', ''),
                 const SizedBox(height: 16.0),
                 _buildFormFieldWithUnit(context, 'Mobilidade', ''),
                 const SizedBox(height: 16.0),
                 _buildFormFieldWithUnit(context, 'Observações', ''),
                 const SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // Ação para salvar o registro
-                  },
-                  child: const Text('Salvar Registro'),
+                const SizedBox(height: 16.0),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 25, 225, 175),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: const Text(
+                      'Salvar sinais',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -52,15 +105,14 @@ class SinaisVitaisInputs extends StatelessWidget {
     );
   }
 
-  Widget _buildFormFieldWithUnit(BuildContext context, String labelText,
-      String unit) {
+  Widget _buildFormFieldWithUnit(BuildContext context, String labelText, String unit) {
     return TextFormField(
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(
-          color: Colors.grey, // Define a cor do rótulo
+          color: Colors.grey,
         ),
-        focusedBorder: const OutlineInputBorder( // Define a borda quando o campo estiver em foco
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.grey,
           ),
@@ -71,13 +123,8 @@ class SinaisVitaisInputs extends StatelessWidget {
           ),
         ),
         suffixText: unit,
-        suffixStyle: Theme
-            .of(context)
-            .textTheme
-            .subtitle1!
-            .copyWith(color: Colors.grey),
+        suffixStyle: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.grey),
       ),
     );
   }
-
 }
