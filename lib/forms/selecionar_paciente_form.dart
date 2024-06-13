@@ -19,7 +19,7 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -31,34 +31,36 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16.0),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Selecionar Paciente',
-                  // Definir a cor da borda
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey), // Cor da borda cinza
-
-                  ),
-                  // Definir a cor do texto do rótulo
-                  labelStyle: TextStyle(color: Colors.grey),
-                ),
-                value: _selectedPaciente,
-                items: widget.pacientes.map((String paciente) {
-                  return DropdownMenuItem<String>(
-                    value: paciente,
-                    child: Text(paciente),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedPaciente = newValue;
+              Autocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text.isEmpty) {
+                    return const Iterable<String>.empty();
+                  }
+                  return widget.pacientes.where((String paciente) {
+                    return paciente.toLowerCase().contains(textEditingValue.text.toLowerCase());
                   });
                 },
-                validator: (value) => value == null ? 'Selecione um paciente' : null,
-                onSaved: widget.onPacienteSelected,
+                onSelected: (String selection) {
+                  setState(() {
+                    _selectedPaciente = selection;
+                  });
+                },
+                fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                  return TextFormField(
+                    controller: textEditingController,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Selecionar Paciente',
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      labelStyle: TextStyle(color: Colors.grey),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16.0),
               Center(
@@ -69,22 +71,21 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 25, 225, 175), // Define a cor do botão
+                    backgroundColor: const Color.fromARGB(255, 25, 225, 175),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5), // Define os cantos retangulares
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
                   child: const Text(
                     'Próximo',
-                    style: TextStyle(color: Colors.white), // Define a cor do texto como branco
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
             ],
           ),
-        )
-      ]
-      ,
+        ),
+      ],
     );
   }
 }
