@@ -68,15 +68,15 @@ class _AppScaffoldState extends State<AppScaffold> {
       ),
     );
   }
-  
+
   String routeForIndex(int index) {
   switch (index) {
     case 0:
       return '/home';
     case 1:
-      return '/registros'; 
-    case 2:
       return '/registros';
+    case 2:
+      return '/perfil';
     default:
       return '/';
   }

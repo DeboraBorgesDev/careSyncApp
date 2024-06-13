@@ -5,10 +5,10 @@ class SelecionarPaciente extends StatefulWidget {
   final ValueChanged<String?> onPacienteSelected;
 
   const SelecionarPaciente({
-    Key? key,
+    super.key,
     required this.pacientes,
     required this.onPacienteSelected,
-  }) : super(key: key);
+  });
 
   @override
   _SelecionarPacienteState createState() => _SelecionarPacienteState();
@@ -32,7 +32,7 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Selecionar Paciente',
                   // Definir a cor da borda
                   focusedBorder: OutlineInputBorder(
@@ -68,15 +68,15 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                       widget.onPacienteSelected(_selectedPaciente);
                     }
                   },
-                  child: const Text(
-                    'Próximo',
-                    style: TextStyle(color: Colors.white), // Define a cor do texto como branco
-                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 25, 225, 175), // Define a cor do botão
+                    backgroundColor: const Color.fromARGB(255, 25, 225, 175), // Define a cor do botão
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5), // Define os cantos retangulares
                     ),
+                  ),
+                  child: const Text(
+                    'Próximo',
+                    style: TextStyle(color: Colors.white), // Define a cor do texto como branco
                   ),
                 ),
               ),

@@ -70,13 +70,13 @@ class Login extends StatelessWidget {
                   // Navegar para a página Home
                   Navigator.pushReplacementNamed(context, '/home');
                 },
-                child: const Text('Entrar'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
+                child: const Text('Entrar'),
               ),
             ),
           ],
