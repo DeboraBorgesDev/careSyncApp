@@ -17,6 +17,7 @@ class SelecionarPaciente extends StatefulWidget {
 
 class _SelecionarPacienteState extends State<SelecionarPaciente> {
   Paciente? _selectedPaciente;
+  bool _isValidated = false; // Estado para controlar validação
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                 onSelected: (Paciente? selection) {
                   setState(() {
                     _selectedPaciente = selection;
+                    _isValidated = true; // Habilita validação ao selecionar paciente
                   });
                 },
                 fieldViewBuilder: (BuildContext context,
@@ -72,9 +74,11 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
               const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    widget.onPacienteSelected(_selectedPaciente);
-                  },
+                  onPressed: _isValidated // Verifica se é válido para ativar o botão
+                      ? () {
+                          widget.onPacienteSelected(_selectedPaciente);
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 25, 225, 175),
                     shape: RoundedRectangleBorder(
@@ -94,4 +98,3 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
     );
   }
 }
-
