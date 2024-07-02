@@ -7,12 +7,13 @@ class ApiClient extends http.BaseClient {
   final http.Client _inner = http.Client();
 
   @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    return _inner.send(_addToken(request));
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    return _inner.send(await _addToken(request));
   }
 
-  http.BaseRequest _addToken(http.BaseRequest request) {
-    return request..headers['Authorization'] = 'Bearer ${getToken()}';
+  Future<http.BaseRequest> _addToken(http.BaseRequest request) async {
+    final token = await getToken();
+    return request..headers['Authorization'] = 'Bearer $token';
   }
 
   Future<String?> getToken() async {
