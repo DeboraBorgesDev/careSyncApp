@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class UsuarioService {
-  static const String _baseUrl = 'http://192.168.0.111:8080/api';
+  static const String _baseUrl = 'http://192.168.0.107:8080/api';
 
   static Future<User?> login(BuildContext context, String email, String password) async {
     final response = await http.post(
@@ -20,6 +20,7 @@ class UsuarioService {
 
     if (response.statusCode == 200) {
       User user = User.fromJson(jsonDecode(response.body));
+      print(user.toString());
 
       final db = await getDatabase();
       await UsuarioPersistence().insertUser(db, user);

@@ -6,7 +6,7 @@ Future<Database> getDatabase() async {
   print('abrindo conexao com o banco');
 
   return openDatabase(
-    join(await getDatabasesPath(), 'testeappnovo.db'),
+    join(await getDatabasesPath(), 'caresync.db'),
     onCreate: (db, version) async {
       List<String> queries = [
         UsuarioPersistence.createTabelaUsuario,

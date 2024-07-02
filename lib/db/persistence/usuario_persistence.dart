@@ -5,7 +5,7 @@ import '../models/usuario.dart';
 class UsuarioPersistence {
   static const String createTabelaUsuario = '''
     CREATE TABLE usuarios (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       nome TEXT,
       email TEXT,
       senha TEXT,

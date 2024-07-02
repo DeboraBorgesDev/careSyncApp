@@ -1,5 +1,5 @@
 class User {
-  int id;
+  String id;
   String nome;
   String email;
   String senha;
@@ -31,5 +31,10 @@ class User {
       'senha': senha,
       'token': token,
     };
+  }
+
+  @override
+  String toString() {
+    return 'User{id: $id, nome: $nome, email: $email, senha: $senha, token: $token}';
   }
 }
