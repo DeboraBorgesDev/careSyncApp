@@ -23,7 +23,7 @@ class _NovoRegistroFormState extends State<NovoRegistroForm> {
 
   Future<void> _fetchPacientes() async {
     try {
-      final pacientes = await ApiService.fetchPacientes();
+      final pacientes = await PacienteService.fetchPacientes();
       setState(() {
         _pacientes = List<Map<String, dynamic>>.from(pacientes);
       });
