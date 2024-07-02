@@ -1,8 +1,9 @@
+import 'package:caresync/db/models/paciente.dart';
 import 'package:flutter/material.dart';
 
 class SelecionarPaciente extends StatefulWidget {
-  final List<Map<String, dynamic>> pacientes;
-  final ValueChanged<Map<String, dynamic>?> onPacienteSelected;
+  final List<Paciente> pacientes;
+  final ValueChanged<Paciente?> onPacienteSelected;
 
   const SelecionarPaciente({
     super.key,
@@ -15,7 +16,7 @@ class SelecionarPaciente extends StatefulWidget {
 }
 
 class _SelecionarPacienteState extends State<SelecionarPaciente> {
-  Map<String, dynamic>? _selectedPaciente;
+  Paciente? _selectedPaciente;
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +32,19 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16.0),
-              Autocomplete<Map<String, dynamic>>(
+              Autocomplete<Paciente>(
                 optionsBuilder: (TextEditingValue textEditingValue) {
                   if (textEditingValue.text.isEmpty) {
-                    return const Iterable<Map<String, dynamic>>.empty();
+                    return const Iterable<Paciente>.empty();
                   }
                   return widget.pacientes.where((paciente) {
-                    return paciente['nome']
+                    return paciente.nome
                         .toLowerCase()
                         .contains(textEditingValue.text.toLowerCase());
                   });
                 },
-                displayStringForOption: (paciente) => paciente['nome'],
-                onSelected: (Map<String, dynamic> selection) {
+                displayStringForOption: (paciente) => paciente.nome,
+                onSelected: (Paciente? selection) {
                   setState(() {
                     _selectedPaciente = selection;
                   });
@@ -72,9 +73,7 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_selectedPaciente != null) {
-                      widget.onPacienteSelected(_selectedPaciente);
-                    }
+                    widget.onPacienteSelected(_selectedPaciente);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 25, 225, 175),
@@ -95,3 +94,4 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
     );
   }
 }
+

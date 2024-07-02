@@ -1,3 +1,4 @@
+import 'package:caresync/db/models/paciente.dart';
 import 'package:caresync/forms/selecionar_paciente_form.dart';
 import 'package:caresync/forms/sinais_vitais_inputs.dart';
 import 'package:caresync/service/paciente.dart';
@@ -11,9 +12,9 @@ class NovoRegistroForm extends StatefulWidget {
 }
 
 class _NovoRegistroFormState extends State<NovoRegistroForm> {
-  Map<String, dynamic>? _selectedPaciente;
+  Paciente? _selectedPaciente;
   bool _showSinaisVitaisInputs = false;
-  List<Map<String, dynamic>> _pacientes = [];
+  List<Paciente> _pacientes = [];
 
   @override
   void initState() {
@@ -22,30 +23,28 @@ class _NovoRegistroFormState extends State<NovoRegistroForm> {
   }
 
   Future<void> _fetchPacientes() async {
-    try {
-      final pacientes = await PacienteService.fetchPacientes();
-      setState(() {
-        _pacientes = List<Map<String, dynamic>>.from(pacientes);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar pacientes: $e')),
-      );
-    }
+  try {
+    final pacientes = await PacienteService.fetchPacientes();
+    setState(() {
+      _pacientes = pacientes;
+    });
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erro ao carregar pacientes: $e')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _showSinaisVitaisInputs && _selectedPaciente != null
-          ? SinaisVitaisInputs(
-              selectedPaciente: _selectedPaciente!,
-            )
+          ? SinaisVitaisInputs(selectedPaciente: _selectedPaciente!)
           : SelecionarPaciente(
               pacientes: _pacientes,
               onPacienteSelected: (paciente) {
                 setState(() {
-                  _selectedPaciente = paciente;
+                  _selectedPaciente = paciente as Paciente?;
                   _showSinaisVitaisInputs = true;
                 });
               },
