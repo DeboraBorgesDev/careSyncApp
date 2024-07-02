@@ -1,4 +1,4 @@
-import 'package:caresync/service/login.dart';
+import 'package:caresync/service/usuario.dart';
 import 'package:flutter/material.dart';
 import 'login_form.dart';
 
@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
     });
 
     try {
-      final response = await ApiService.login(
+      final response = await UsuarioService.login(
         context,
         _emailController.text,
         _passwordController.text,

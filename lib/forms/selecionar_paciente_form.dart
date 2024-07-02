@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SelecionarPaciente extends StatefulWidget {
-  final List<String> pacientes;
-  final ValueChanged<String?> onPacienteSelected;
+  final List<Map<String, dynamic>> pacientes;
+  final ValueChanged<Map<String, dynamic>?> onPacienteSelected;
 
   const SelecionarPaciente({
     super.key,
@@ -15,7 +15,7 @@ class SelecionarPaciente extends StatefulWidget {
 }
 
 class _SelecionarPacienteState extends State<SelecionarPaciente> {
-  String? _selectedPaciente;
+  Map<String, dynamic>? _selectedPaciente;
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +31,27 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16.0),
-              Autocomplete<String>(
+              Autocomplete<Map<String, dynamic>>(
                 optionsBuilder: (TextEditingValue textEditingValue) {
                   if (textEditingValue.text.isEmpty) {
-                    return const Iterable<String>.empty();
+                    return const Iterable<Map<String, dynamic>>.empty();
                   }
-                  return widget.pacientes.where((String paciente) {
-                    return paciente.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                  return widget.pacientes.where((paciente) {
+                    return paciente['nome']
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase());
                   });
                 },
-                onSelected: (String selection) {
+                displayStringForOption: (paciente) => paciente['nome'],
+                onSelected: (Map<String, dynamic> selection) {
                   setState(() {
                     _selectedPaciente = selection;
                   });
                 },
-                fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                fieldViewBuilder: (BuildContext context,
+                    TextEditingController textEditingController,
+                    FocusNode focusNode,
+                    VoidCallback onFieldSubmitted) {
                   return TextFormField(
                     controller: textEditingController,
                     focusNode: focusNode,

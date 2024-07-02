@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class SinaisVitaisInputs extends StatelessWidget {
-  final String selectedPaciente;
+  final Map<String, dynamic> selectedPaciente;
 
   const SinaisVitaisInputs({
     super.key,
@@ -10,6 +11,9 @@ class SinaisVitaisInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateTime parsedDate = DateTime.parse(selectedPaciente['dataNascimento']);
+    final String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registros de Sinais Vitais'),
@@ -35,13 +39,26 @@ class SinaisVitaisInputs extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            selectedPaciente,
+                            selectedPaciente['nome'],
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          // Other patient details here
+                          Text(
+                            'Data de Nascimento: $formattedDate',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          Text(
+                            'CPF: ${selectedPaciente['cpf']}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -72,8 +89,9 @@ class SinaisVitaisInputs extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/registros');
-                },
+                    // Handle save action
+                    Navigator.pushReplacementNamed(context, '/registros');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 25, 225, 175),
                     shape: RoundedRectangleBorder(
