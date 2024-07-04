@@ -7,6 +7,7 @@ import 'dart:convert';
 
 class UsuarioService {
   static const String _baseUrl = 'http://192.168.0.107:8080/api';
+  static User? currentUser;
 
   static Future<User?> login(BuildContext context, String email, String password) async {
     final response = await http.post(
@@ -25,6 +26,7 @@ class UsuarioService {
       final db = await getDatabase();
       await UsuarioPersistence().insertUser(db, user);
 
+      currentUser = user;
       return user;
     } else {
       _showError(context, 'Falha no login: ${response.body}');

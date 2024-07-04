@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 class SinaisVitais {
-  final String id;
+  final String? id;
   final String idPaciente;
   final String idProfissional;
   final int? freqCardiaca;
@@ -14,7 +16,7 @@ class SinaisVitais {
   final String? observacoes;
 
   SinaisVitais({
-    required this.id,
+    this.id,
     required this.idPaciente,
     required this.idProfissional,
     this.freqCardiaca,
@@ -50,8 +52,8 @@ class SinaisVitais {
   factory SinaisVitais.fromMap(Map<String, dynamic> map) {
     return SinaisVitais(
       id: map['id'],
-      idPaciente: map['idPaciente'],
-      idProfissional: map['idProfissional'],
+      idPaciente: map['paciente']['id'],
+      idProfissional: map['profissional']['id'],
       freqCardiaca: map['freqCardiaca'],
       freqRespiratoria: map['freqRespiratoria'],
       pressaoArterial: map['pressaoArterial'],
@@ -63,5 +65,13 @@ class SinaisVitais {
       mobilidade: map['mobilidade'],
       observacoes: map['observacoes'],
     );
+  }
+
+  String toJson() {
+    return jsonEncode(toMap());
+  }
+
+  factory SinaisVitais.fromJson(String json) {
+    return SinaisVitais.fromMap(jsonDecode(json));
   }
 }

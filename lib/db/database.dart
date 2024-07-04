@@ -8,12 +8,12 @@ Future<Database> getDatabase() async {
   print('abrindo conexao com o banco');
 
   return openDatabase(
-    join(await getDatabasesPath(), 'teste.db'),
+    join(await getDatabasesPath(), 'app.db'),
     onCreate: (db, version) async {
       List<String> queries = [
+        SinaisVitaisPersistence.createTabelaSinaisVitais,
         UsuarioPersistence.createTabelaUsuario,
         PacientePersistence.createTabelaPaciente,
-        SinaisVitaisPersistence.createTabelaSinaisVitais,
       ];
 
       print('getDatabasesPath(): ${await getDatabasesPath()}');
