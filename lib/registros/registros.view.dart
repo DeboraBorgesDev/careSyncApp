@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:caresync/components/AppScaffold/app_scaffould.dart';
-
-import '../components/RegistroCard/registro_card.view.dart';
-
+import 'package:caresync/components/RegistroCard/registro_card.view.dart';
+import 'package:caresync/service/sinais_vitais.dart';
+import 'package:caresync/db/models/sinais_vitais.dart';
 
 class RegistrosPage extends StatelessWidget {
   const RegistrosPage({super.key});
@@ -16,53 +16,72 @@ class RegistrosPage extends StatelessWidget {
   }
 }
 
-class RegistrosContent extends StatelessWidget {
+class RegistrosContent extends StatefulWidget {
   const RegistrosContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> registros = [
-      {
-        'nomePaciente': 'João Silva',
-        'dataHora': '2023-06-06 14:30',
-        'sinaisVitais': [
-          {'descricao': 'Pressão Arterial', 'resultado': '120/80 mmHg'},
-          {'descricao': 'Frequência Cardíaca', 'resultado': '70 bpm'},
-          {'descricao': 'Temperatura', 'resultado': '36.5 ºC'},
-          {'descricao': 'Frequência Respiratória', 'resultado': '16 rpm'},
-          {'descricao': 'Oxigenação', 'resultado': '98%'},
-          {'descricao': 'Glicemia', 'resultado': '90 mg/dL'},
-          {'descricao': 'Peso', 'resultado': '70 kg'},
-          {'descricao': 'Constipação e/ou Incontinência Fecal/Urinária', 'resultado': 'Nenhuma'},
-          {'descricao': 'Mobilidade', 'resultado': 'Independente'},
-          {'descricao': 'Observações', 'resultado': 'Paciente estável'},
-        ],
-      },
-      {
-        'nomePaciente': 'Maria Oliveira',
-        'dataHora': '2023-06-06 15:45',
-        'sinaisVitais': [
-          {'descricao': 'Pressão Arterial', 'resultado': '130/85 mmHg'},
-          {'descricao': 'Frequência Cardíaca', 'resultado': '75 bpm'},
-          {'descricao': 'Temperatura', 'resultado': '36.7 ºC'},
-          {'descricao': 'Frequência Respiratória', 'resultado': '18 rpm'},
-          {'descricao': 'Oxigenação', 'resultado': '97%'},
-          {'descricao': 'Glicemia', 'resultado': '100 mg/dL'},
-          {'descricao': 'Peso', 'resultado': '65 kg'},
-          {'descricao': 'Constipação e/ou Incontinência Fecal/Urinária', 'resultado': 'Nenhuma'},
-          {'descricao': 'Mobilidade', 'resultado': 'Auxílio para caminhar'},
-          {'descricao': 'Observações', 'resultado': 'Paciente com leve dor nas pernas'},
-        ],
-      },
-    ];
+  _RegistrosContentState createState() => _RegistrosContentState();
+}
 
+class _RegistrosContentState extends State<RegistrosContent> {
+  SinaisVitaisService sinaisVitaisService = SinaisVitaisService();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: registros.length,
-        itemBuilder: (context, index) {
-          return RegistroCard(registro: registros[index]);
+      appBar: AppBar(
+        title: const Text('Registros de Sinais Vitais'),
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
         },
+        child: FutureBuilder<List<SinaisVitais>>(
+          future: SinaisVitaisService.listarSinaisVitais(context),
+          builder: (context, snapshot) {
+            final List<SinaisVitais>? sinaisVitais = snapshot.data;
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData && sinaisVitais != null && sinaisVitais.isNotEmpty) {
+              return ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: sinaisVitais.length,
+                itemBuilder: (context, index) {
+                  final SinaisVitais registro = sinaisVitais[index];
+
+                  return RegistroCard(
+                    registro: {
+                      'nomePaciente': registro.paciente?.nome ?? 'N/A',
+                      'dataHora': registro.dataHora ?? 'N/A',
+                      'sinaisVitais': [
+                        {'descricao': 'Pressão Arterial', 'resultado': registro.pressaoArterial ?? 'N/A'},
+                        {'descricao': 'Frequência Cardíaca', 'resultado': registro.freqCardiaca?.toString() ?? 'N/A'},
+                        {'descricao': 'Temperatura', 'resultado': registro.temperatura?.toString() ?? 'N/A'},
+                        {'descricao': 'Frequência Respiratória', 'resultado': registro.freqRespiratoria?.toString() ?? 'N/A'},
+                        {'descricao': 'Oxigenação', 'resultado': registro.oxigenacao?.toString() ?? 'N/A'},
+                        {'descricao': 'Glicemia', 'resultado': registro.glicemia?.toString() ?? 'N/A'},
+                        {'descricao': 'Peso', 'resultado': registro.peso?.toString() ?? 'N/A'},
+                        {'descricao': 'Constipação e/ou Incontinência Fecal/Urinária', 'resultado': registro.constipacao ?? 'N/A'},
+                        {'descricao': 'Mobilidade', 'resultado': registro.mobilidade ?? 'N/A'},
+                        {'descricao': 'Observações', 'resultado': registro.observacoes ?? 'N/A'},
+                      ],
+                    },
+                  );
+                },
+              );
+            }
+
+            return const Center(
+              child: Text(
+                'Não há registros de sinais vitais',
+                style: TextStyle(fontSize: 20),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

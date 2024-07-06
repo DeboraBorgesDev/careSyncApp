@@ -28,4 +28,23 @@ class Paciente {
       'dataNascimento': dataNascimento,
     };
   }
+
+    factory Paciente.fromMap(Map<String, dynamic> map) {
+    return Paciente(
+      id: map['id'],
+      nome: map['nome'],
+      cpf: map['cpf'],
+      dataNascimento:  map['dataNascimento']
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'cpf': cpf,
+      'dataNascimento': dataNascimento
+    };
+  }
 }
+

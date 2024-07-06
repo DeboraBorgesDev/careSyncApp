@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:caresync/db/database.dart';
+import 'package:caresync/db/models/paciente.dart';
 import 'package:caresync/db/models/sinais_vitais.dart';
 import 'package:caresync/db/persistence/sinais_vitais_persistence.dart';
 import 'package:caresync/service/api_client.dart';
@@ -34,31 +35,50 @@ static Future<void> salvarSinaisVitais(BuildContext context, SinaisVitais sinais
     _showError(context, 'Erro ao salvar sinais vitais: $e');
   }
 }
-  static Future<List<SinaisVitais>> listarSinaisVitais(BuildContext context) async {
-    try {
-      final response = await _apiClient.get('$_baseUrl/sinais' as Uri);
 
-      if (response.statusCode == 200) {
-        List<dynamic> jsonList = jsonDecode(response.body);
-        List<SinaisVitais> sinaisVitais = jsonList.map((json) => SinaisVitais.fromJson(json)).toList();
+static Future<List<SinaisVitais>> listarSinaisVitais(BuildContext context) async {
+  try {
+    final response = await _apiClient.get(Uri.parse('$_baseUrl/sinais'));
 
-        final db = await getDatabase();
-        final sinaisVitaisPersistence = SinaisVitaisPersistence();
-        for (SinaisVitais sinais in sinaisVitais) {
-          await sinaisVitaisPersistence.insertSinaisVitais(db, sinais);
-        }
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+      print('Dados recebidos do servidor: $jsonList');
 
-        return sinaisVitais;
-      } else {
-        _showError(context, 'Erro ao listar sinais vitais no servidor: ${response.body}');
-        return [];
-      }
-    } catch (e) {
-      print('Erro ao buscar sinais vitais: $e');
-      _showError(context, 'Erro ao buscar sinais vitais: $e');
+      List<SinaisVitais> sinaisVitais = jsonList.map((json) {
+        return SinaisVitais(
+          id: json['id'],
+          idPaciente: json['idPaciente'],
+          idProfissional: json['idProfissional'],
+          freqCardiaca: json['freqCardiaca'],
+          freqRespiratoria: json['freqRespiratoria'],
+          pressaoArterial: json['pressaoArterial'],
+          constipacao: json['constipacao'],
+          glicemia: json['glicemia'],
+          temperatura: json['temperatura'],
+          oxigenacao: json['oxigenacao'],
+          peso: json['peso'],
+          mobilidade: json['mobilidade'],
+          observacoes: json['observacoes'],
+          dataHora: json['dataHora'],
+          paciente: json['paciente'] != null ? Paciente.fromMap(json['paciente']) : null,
+        );
+      }).toList();
+
+      return sinaisVitais;
+    } else {
+      print('Erro ao listar sinais vitais: ${response.statusCode} - ${response.body}');
+      _showError(context, 'Erro ao listar sinais vitais no servidor: ${response.statusCode}');
       return [];
     }
+  } catch (e) {
+    print('Erro ao buscar sinais vitais: $e');
+    _showError(context, 'Erro ao buscar sinais vitais: $e');
+    return [];
   }
+}
+
+
+
 
   static void _showError(BuildContext context, String message) {
     final snackBar = SnackBar(
