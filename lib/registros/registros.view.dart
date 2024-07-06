@@ -3,6 +3,8 @@ import 'package:caresync/components/AppScaffold/app_scaffould.dart';
 import 'package:caresync/components/RegistroCard/registro_card.view.dart';
 import 'package:caresync/service/sinais_vitais.dart';
 import 'package:caresync/db/models/sinais_vitais.dart';
+import 'package:intl/intl.dart';
+
 
 class RegistrosPage extends StatelessWidget {
   const RegistrosPage({super.key});
@@ -25,7 +27,14 @@ class RegistrosContent extends StatefulWidget {
 
 class _RegistrosContentState extends State<RegistrosContent> {
   SinaisVitaisService sinaisVitaisService = SinaisVitaisService();
+  String formatDateTime(String dateTime) {
+  final DateFormat originalFormat = DateFormat('yyyy-MM-ddTHH:mm:ss');
+  final DateFormat desiredFormat = DateFormat('dd/MM/yyyy HH:mm');
 
+  DateTime date = originalFormat.parse(dateTime);
+
+  return desiredFormat.format(date);
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,8 +64,7 @@ class _RegistrosContentState extends State<RegistrosContent> {
                   return RegistroCard(
                     registro: {
                       'nomePaciente': registro.paciente?.nome ?? 'N/A',
-                      'dataHora': registro.dataHora ?? 'N/A',
-                      'sinaisVitais': [
+                      'dataHora': registro.dataHora != null ? formatDateTime(registro.dataHora!) : 'N/A',                      'sinaisVitais': [
                         {'descricao': 'Pressão Arterial', 'resultado': registro.pressaoArterial ?? 'N/A'},
                         {'descricao': 'Frequência Cardíaca', 'resultado': registro.freqCardiaca?.toString() ?? 'N/A'},
                         {'descricao': 'Temperatura', 'resultado': registro.temperatura?.toString() ?? 'N/A'},
