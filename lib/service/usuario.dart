@@ -21,7 +21,6 @@ class UsuarioService {
 
     if (response.statusCode == 200) {
       User user = User.fromJson(jsonDecode(response.body));
-      print(user.toString());
 
       final db = await getDatabase();
       await UsuarioPersistence().insertUser(db, user);

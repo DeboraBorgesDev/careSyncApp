@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:caresync/db/database.dart';
 import 'package:caresync/db/models/paciente.dart';
+import 'package:caresync/db/models/sinais_form.dart';
 import 'package:caresync/db/models/sinais_vitais.dart';
 import 'package:caresync/db/persistence/sinais_vitais_persistence.dart';
 import 'package:caresync/service/api_client.dart';
@@ -11,11 +12,12 @@ class SinaisVitaisService {
   static const String _baseUrl = 'http://192.168.0.107:8080/api';
   static final ApiClient _apiClient = ApiClient();
 
-static Future<void> salvarSinaisVitais(BuildContext context, SinaisVitais sinaisVitais) async {
+static Future<void> salvarSinaisVitais(BuildContext context, SinaisForm sinaisVitais) async {
+  print(sinaisVitais.toString());
   try {
     final response = await _apiClient.post(
       Uri.parse('$_baseUrl/sinais/registrar'),
-      body: sinaisVitais.toJson(),
+      body: sinaisVitais.toJsonString(),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -35,14 +37,12 @@ static Future<void> salvarSinaisVitais(BuildContext context, SinaisVitais sinais
     _showError(context, 'Erro ao salvar sinais vitais: $e');
   }
 }
-
 static Future<List<SinaisVitais>> listarSinaisVitais(BuildContext context) async {
   try {
     final response = await _apiClient.get(Uri.parse('$_baseUrl/sinais'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body);
-      print('Dados recebidos do servidor: $jsonList');
 
       List<SinaisVitais> sinaisVitais = jsonList.map((json) {
         return SinaisVitais(
@@ -77,11 +77,13 @@ static Future<List<SinaisVitais>> listarSinaisVitais(BuildContext context) async
   }
 }
 
-static Future<void> editarSinaisVitais(BuildContext context, SinaisVitais sinaisVitais) async {
+static Future<void> editarSinaisVitais(BuildContext context, SinaisVitais sinaisVitais, String id) async {
+  print(id);
+  print(sinaisVitais.toJsonString());
     try {
       await _apiClient.put(
-        Uri.parse('$_baseUrl/sinais/${sinaisVitais.id}'),
-        body: sinaisVitais.toJson(),
+        Uri.parse('$_baseUrl/sinais/$id'),
+        body: sinaisVitais.toJsonString(),
         headers: {'Content-Type': 'application/json'},
       );
     } catch (e) {

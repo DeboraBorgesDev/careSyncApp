@@ -101,13 +101,14 @@ void _showEditModal(BuildContext context, Map<String, dynamic> registro) {
     context: context,
     builder: (BuildContext context) {
       return Dialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         child: FractionallySizedBox(
           widthFactor: 1.0,
           heightFactor: 1.0,
           child: SinaisVitaisInputs(
             registro: registro['sinaisVitais'],
             selectedPaciente: selectedPaciente,
+            id: registro['id']
           ),
         ),
       );

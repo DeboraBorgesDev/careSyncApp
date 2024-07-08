@@ -1,4 +1,8 @@
 import 'package:caresync/db/models/paciente.dart';
+import 'package:caresync/db/models/sinais_form.dart';
+import 'package:caresync/db/models/sinais_vitais.dart';
+import 'package:caresync/service/sinais_vitais.dart';
+import 'package:caresync/service/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,10 +25,11 @@ class Registro {
 
 class SinaisVitaisInputs extends StatefulWidget {
   final List<Map<String, String>>? registro;
-    final Paciente selectedPaciente;
+  final Paciente selectedPaciente;
+  final String? id;
 
 
-  const SinaisVitaisInputs({super.key, this.registro, required this.selectedPaciente});
+  const SinaisVitaisInputs({super.key, this.registro, required this.selectedPaciente, this.id});
 
   @override
   _SinaisVitaisInputsState createState() => _SinaisVitaisInputsState();
@@ -75,6 +80,7 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
 
     final DateTime parsedDate = DateTime.parse(widget.selectedPaciente.dataNascimento);
     final String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
@@ -144,18 +150,37 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
               _buildFormFieldWithUnit('Observações', '', 'observacoes'),
               const SizedBox(height: 16.0),
               Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await _saveSinaisVitais();
-                      if (mounted) {
-                        Navigator.of(context).pop();
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        if (_formKey.currentState!.validate()) {
+                          SinaisVitais sinaisVitais = buildSinaisVitaisFromForm();
+                          if(widget.id != null){
+                            await SinaisVitaisService.editarSinaisVitais(context, sinaisVitais, widget.id as String);
+                            Navigator.pushReplacementNamed(context, '/registros');
+                          } else{
+                            await SinaisVitaisService.salvarSinaisVitais(context, SinaisForm.fromSinaisVitais(sinaisVitais));
+                            Navigator.pushReplacementNamed(context, '/registros');
+                          }
+                          
+                        }
+                      } catch (e) {
+                        print('Erro ao salvar sinais vitais: $e');
+                        _showError(context, 'Erro ao salvar sinais vitais: $e');
                       }
-                    }
-                  },
-                  child: const Text('Salvar'),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 25, 225, 175),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: const Text(
+                      'Salvar sinais',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -181,7 +206,32 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
     );
   }
 
-  Future<void> _saveSinaisVitais() async {
-    // Lógica para salvar os sinais vitais
+    SinaisVitais buildSinaisVitaisFromForm() {
+    return SinaisVitais(
+      idPaciente: widget.selectedPaciente.id,
+      idProfissional: UsuarioService.currentUser!.id,
+      freqCardiaca: int.tryParse(_textEditingControllerMap['freqCardiaca']?.text ?? ''),
+      freqRespiratoria: int.tryParse(_textEditingControllerMap['freqRespiratoria']?.text ?? ''),
+      pressaoArterial: _textEditingControllerMap['pressaoArterial']?.text,
+      constipacao: _textEditingControllerMap['constipacao']?.text,
+      glicemia: double.tryParse(_textEditingControllerMap['glicemia']?.text ?? ''),
+      temperatura: double.tryParse(_textEditingControllerMap['temperatura']?.text ?? ''),
+      oxigenacao: double.tryParse(_textEditingControllerMap['oxigenacao']?.text ?? ''),
+      peso: double.tryParse(_textEditingControllerMap['peso']?.text ?? ''),
+      mobilidade: _textEditingControllerMap['mobilidade']?.text,
+      observacoes: _textEditingControllerMap['observacoes']?.text,
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

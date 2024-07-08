@@ -16,7 +16,8 @@ class SinaisVitaisPersistence {
         oxigenacao REAL,
         peso REAL,
         mobilidade TEXT,
-        observacoes TEXT
+        observacoes TEXT,
+        dataHora TEXT
       )
     ''';
 

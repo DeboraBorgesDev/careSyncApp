@@ -61,11 +61,12 @@ class _RegistrosContentState extends State<RegistrosContent> {
 
                   return RegistroCard(
                     registro: {
+                      'id': registro.id,
                       'idPaciente': registro.paciente?.id,
                       'nomePaciente': registro.paciente?.nome ?? 'N/A',
                       'cpf': registro.paciente?.cpf ?? '',
                       'dataNascimento': registro.paciente?.dataNascimento ?? '',
-                      'dataHora': registro.dataHora != null ? formatDateTime(registro.dataHora!) : 'N/A',                      
+                      'dataHora': registro.dataHora != null ? formatDateTime(registro.dataHora!) : 'N/A',                     
                       'sinaisVitais': [
                         {'key': 'pressaoArterial', 'descricao': 'Pressão Arterial', 'resultado': registro.pressaoArterial ?? 'N/A'},
                         {'key': 'freqCardiaca', 'descricao': 'Frequência Cardíaca', 'resultado': registro.freqCardiaca?.toString() ?? 'N/A'},

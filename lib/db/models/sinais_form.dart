@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:caresync/db/models/paciente.dart';
+import 'package:caresync/db/models/sinais_vitais.dart';
 
-class SinaisVitais {
+class SinaisForm {
   final String? id;
   final String? idPaciente;
   final String? idProfissional;
@@ -17,9 +17,8 @@ class SinaisVitais {
   final String? mobilidade;
   final String? observacoes;
   final String? dataHora;
-  final Paciente? paciente;
 
-  SinaisVitais({
+  SinaisForm({
     this.id,
     this.idPaciente,
     this.idProfissional,
@@ -34,30 +33,10 @@ class SinaisVitais {
     this.mobilidade,
     this.observacoes,
     this.dataHora,
-    this.paciente,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'idPaciente': idPaciente,
-      'idProfissional': idProfissional,
-      'freqCardiaca': freqCardiaca,
-      'freqRespiratoria': freqRespiratoria,
-      'pressaoArterial': pressaoArterial,
-      'constipacao': constipacao,
-      'glicemia': glicemia,
-      'temperatura': temperatura,
-      'oxigenacao': oxigenacao,
-      'peso': peso,
-      'mobilidade': mobilidade,
-      'observacoes': observacoes,
-      'dataHora': dataHora,
-    };
-  }
-
-  factory SinaisVitais.fromMap(Map<String, dynamic> map) {
-    return SinaisVitais(
+  factory SinaisForm.fromMap(Map<String, dynamic> map) {
+    return SinaisForm(
       id: map['id'],
       idPaciente: map['idPaciente'] ?? '',
       idProfissional: map['idProfissional'] ?? '',
@@ -72,7 +51,6 @@ class SinaisVitais {
       mobilidade: map['mobilidade'] ?? '',
       observacoes: map['observacoes'] ?? '',
       dataHora: map['dataHora'] ?? '',
-      paciente: map['paciente'] != null ? Paciente.fromMap(map['paciente']) : null,
     );
   }
 
@@ -92,14 +70,20 @@ class SinaisVitais {
       'mobilidade': mobilidade,
       'observacoes': observacoes,
       'dataHora': dataHora,
-      'paciente': paciente?.toJson(),
     };
   }
 
+  String toJsonString() {
+    return jsonEncode(toJson());
+  }
 
-  factory SinaisVitais.fromJson(Map<String, dynamic> map) {
-    return SinaisVitais(
-      id: map['id'],
+  factory SinaisForm.fromJsonString(String json) {
+    return SinaisForm.fromJson(jsonDecode(json));
+  }
+  
+  static SinaisForm fromJson(Map<String, dynamic> map) {
+    return SinaisForm(
+       id: map['id'],
       idPaciente: map['idPaciente'] ?? '',
       idProfissional: map['idProfissional'] ?? '',
       freqCardiaca: map['freqCardiaca'] ?? 0,
@@ -112,18 +96,24 @@ class SinaisVitais {
       peso: map['peso'] ?? 0,
       mobilidade: map['mobilidade'] ?? '',
       observacoes: map['observacoes'] ?? '',
-      dataHora: map['dataHora'] ?? '',
-      paciente: map['paciente'] != null ? Paciente.fromJson(map['paciente']) : null,
     );
   }
 
-  String toJsonString() {
-    return jsonEncode(toJson());
-  }
-
-  factory SinaisVitais.fromJsonString(String json) {
-    return SinaisVitais.fromJson(jsonDecode(json));
+    static SinaisForm fromSinaisVitais(SinaisVitais sinaisVitais) {
+    return SinaisForm(
+      idPaciente: sinaisVitais.idPaciente,
+      idProfissional: sinaisVitais.idProfissional,
+      freqCardiaca: sinaisVitais.freqCardiaca,
+      freqRespiratoria: sinaisVitais.freqRespiratoria,
+      pressaoArterial: sinaisVitais.pressaoArterial,
+      constipacao: sinaisVitais.constipacao,
+      glicemia: sinaisVitais.glicemia,
+      temperatura: sinaisVitais.temperatura,
+      oxigenacao: sinaisVitais.oxigenacao,
+      peso: sinaisVitais.peso,
+      observacoes: sinaisVitais.observacoes,
+      dataHora: sinaisVitais.dataHora,
+      mobilidade: sinaisVitais.mobilidade
+    );
   }
 }
-
-
