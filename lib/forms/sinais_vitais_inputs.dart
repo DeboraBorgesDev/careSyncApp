@@ -191,7 +191,7 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
   Widget _buildFormFieldWithUnit(String label, String unit, String key) {
     return TextFormField(
       controller: _textEditingControllerMap[key],
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: label,
         suffixText: unit,
