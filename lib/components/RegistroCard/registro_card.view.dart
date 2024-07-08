@@ -88,14 +88,7 @@ class _RegistroCardState extends State<RegistroCard> {
   }
 
 void _showEditModal(BuildContext context, Map<String, dynamic> registro) {
-  print(registro);
-  List<String> formatarSinaisVitais(Map<String, dynamic> registro) {
-    return registro['sinaisVitais']
-        .map<String>((sinal) => '${sinal['descricao']}: ${sinal['resultado']}')
-        .toList();
-  }
 
-  List<String> sinaisVitaisFormatted = formatarSinaisVitais(registro);
 
   Paciente selectedPaciente = Paciente(
     id: registro['idPaciente'] ?? '',
@@ -113,7 +106,7 @@ void _showEditModal(BuildContext context, Map<String, dynamic> registro) {
           widthFactor: 1.0,
           heightFactor: 1.0,
           child: SinaisVitaisInputs(
-            registro: sinaisVitaisFormatted,
+            registro: registro['sinaisVitais'],
             selectedPaciente: selectedPaciente,
           ),
         ),

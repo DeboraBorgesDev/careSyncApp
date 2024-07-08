@@ -2,9 +2,25 @@ import 'package:caresync/db/models/paciente.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+class Registro {
+  final String key;
+  final String resultado;
+  final String descricao;
+
+  Registro({required this.key, required this.resultado, required this.descricao});
+
+  factory Registro.fromMap(Map<String, String> map) {
+    return Registro(
+      key: map['key']!,
+      resultado: map['resultado']!,
+      descricao:  map['descricao']!
+    );
+  }
+}
+
 
 class SinaisVitaisInputs extends StatefulWidget {
-  final List<String>? registro;
+  final List<Map<String, String>>? registro;
     final Paciente selectedPaciente;
 
 
@@ -25,29 +41,28 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
     'glicemia': TextEditingController(),
     'peso': TextEditingController(),
     'constipacao': TextEditingController(),
+    'observacoes': TextEditingController(), 
   };
 
-  @override
+@override
   void initState() {
     super.initState();
 
     // Preencher os campos com os valores iniciais
     if (widget.registro != null) {
-      for (String item in widget.registro!) {
-        // Separar a chave e o valor da string
-        List<String> parts = item.split(':');
-        if (parts.length == 2) {
-          String descricao = parts[0].trim();
-          String resultado = parts[1].trim();
-
-          // Encontrar o campo correspondente no _textEditingControllerMap
-          if (_textEditingControllerMap.containsKey(descricao.toLowerCase())) {
-            _textEditingControllerMap[descricao.toLowerCase()]?.text = resultado;
+      for (var item in widget.registro!) {
+        // Assumindo que item é um mapa com chaves 'key', 'resultado', e 'descricao'
+        if (item.containsKey('key') && item.containsKey('resultado')) {
+          String key = item['key']!;
+          String resultado = item['resultado']!;
+          if (_textEditingControllerMap.containsKey(key)) {
+            _textEditingControllerMap[key]?.text = resultado;
           }
         }
       }
     }
   }
+
 
 
   @override
@@ -125,6 +140,8 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
               _buildFormFieldWithUnit('Peso', 'kg', 'peso'),
               const SizedBox(height: 16.0),
               _buildFormFieldWithUnit('Constipação ou Incontinência Fecal/Urinária', '', 'constipacao'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Observações', '', 'observacoes'),
               const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
