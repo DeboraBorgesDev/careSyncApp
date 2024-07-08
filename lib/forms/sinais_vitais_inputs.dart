@@ -1,17 +1,14 @@
+import 'package:caresync/db/models/paciente.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:caresync/db/models/paciente.dart';
-import 'package:caresync/db/models/sinais_vitais.dart';
-import 'package:caresync/service/sinais_vitais.dart';
-import 'package:caresync/service/usuario.dart';
+
 
 class SinaisVitaisInputs extends StatefulWidget {
-  final Paciente selectedPaciente;
+  final List<String>? registro;
+    final Paciente selectedPaciente;
 
-  const SinaisVitaisInputs({
-    super.key,
-    required this.selectedPaciente,
-  });
+
+  const SinaisVitaisInputs({super.key, this.registro, required this.selectedPaciente});
 
   @override
   _SinaisVitaisInputsState createState() => _SinaisVitaisInputsState();
@@ -28,9 +25,30 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
     'glicemia': TextEditingController(),
     'peso': TextEditingController(),
     'constipacao': TextEditingController(),
-    'mobilidade': TextEditingController(),
-    'observacoes': TextEditingController(),
   };
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Preencher os campos com os valores iniciais
+    if (widget.registro != null) {
+      for (String item in widget.registro!) {
+        // Separar a chave e o valor da string
+        List<String> parts = item.split(':');
+        if (parts.length == 2) {
+          String descricao = parts[0].trim();
+          String resultado = parts[1].trim();
+
+          // Encontrar o campo correspondente no _textEditingControllerMap
+          if (_textEditingControllerMap.containsKey(descricao.toLowerCase())) {
+            _textEditingControllerMap[descricao.toLowerCase()]?.text = resultado;
+          }
+        }
+      }
+    }
+  }
+
 
   @override
   void dispose() {
@@ -42,169 +60,111 @@ class _SinaisVitaisInputsState extends State<SinaisVitaisInputs> {
 
   @override
   Widget build(BuildContext context) {
+
     final DateTime parsedDate = DateTime.parse(widget.selectedPaciente.dataNascimento);
     final String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registros de Sinais Vitais'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.account_circle),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.selectedPaciente.nome,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.account_circle),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.selectedPaciente.nome,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              'Data de Nascimento: $formattedDate',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
+                          ),
+                          Text(
+                            'Data de Nascimento: $formattedDate',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
                             ),
-                            Text(
-                              'CPF: ${widget.selectedPaciente.cpf}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
+                          ),
+                          Text(
+                            'CPF: ${widget.selectedPaciente.cpf}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Frequência Cardíaca', 'bpm', 'freqCardiaca'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Pressão Arterial', 'mmHg', 'pressaoArterial'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Temperatura', '°C', 'temperatura'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Frequência Respiratória', 'rpm', 'freqRespiratoria'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Oxigenação', '%', 'oxigenacao'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Glicemia', 'mg/dL', 'glicemia'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Peso', 'kg', 'peso'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Constipação ou Incontinência Fecal/Urinária', '', 'constipacao'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Mobilidade', '', 'mobilidade'),
-                const SizedBox(height: 16.0),
-                _buildFormFieldWithUnit('Observações', '', 'observacoes'),
-                const SizedBox(height: 16.0),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        if (_formKey.currentState!.validate()) {
-                          SinaisVitais sinaisVitais = buildSinaisVitaisFromForm();
-                          await SinaisVitaisService.salvarSinaisVitais(context, sinaisVitais);
-                          Navigator.pushReplacementNamed(context, '/registros');
-                        }
-                      } catch (e) {
-                        print('Erro ao salvar sinais vitais: $e');
-                        _showError(context, 'Erro ao salvar sinais vitais: $e');
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 25, 225, 175),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                          ),
+                        ],
                       ),
-                    ),
-                    child: const Text(
-                      'Salvar sinais',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Frequência Cardíaca', 'bpm', 'freqCardiaca'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Pressão Arterial', 'mmHg', 'pressaoArterial'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Temperatura', '°C', 'temperatura'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Frequência Respiratória', 'rpm', 'freqRespiratoria'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Oxigenação', '%', 'oxigenacao'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Glicemia', 'mg/dL', 'glicemia'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Peso', 'kg', 'peso'),
+              const SizedBox(height: 16.0),
+              _buildFormFieldWithUnit('Constipação ou Incontinência Fecal/Urinária', '', 'constipacao'),
+              const SizedBox(height: 16.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await _saveSinaisVitais();
+                      if (mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  },
+                  child: const Text('Salvar'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildFormFieldWithUnit(String labelText, String unit, String key) {
+  Widget _buildFormFieldWithUnit(String label, String unit, String key) {
     return TextFormField(
       controller: _textEditingControllerMap[key],
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: label,
+        suffixText: unit,
+        border: const OutlineInputBorder(),
+      ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Por favor, insira um valor válido para $labelText';
+          return 'Por favor, insira $label';
         }
         return null;
       },
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: const TextStyle(
-          color: Colors.grey,
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
-        ),
-        border: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
-        ),
-        suffixText: unit,
-        suffixStyle: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.grey),
-      ),
     );
   }
 
-  SinaisVitais buildSinaisVitaisFromForm() {
-    return SinaisVitais(
-      idPaciente: widget.selectedPaciente.id,
-      idProfissional: UsuarioService.currentUser!.id,
-      freqCardiaca: int.tryParse(_textEditingControllerMap['freqCardiaca']?.text ?? ''),
-      freqRespiratoria: int.tryParse(_textEditingControllerMap['freqRespiratoria']?.text ?? ''),
-      pressaoArterial: _textEditingControllerMap['pressaoArterial']?.text,
-      constipacao: _textEditingControllerMap['constipacao']?.text,
-      glicemia: double.tryParse(_textEditingControllerMap['glicemia']?.text ?? ''),
-      temperatura: double.tryParse(_textEditingControllerMap['temperatura']?.text ?? ''),
-      oxigenacao: double.tryParse(_textEditingControllerMap['oxigenacao']?.text ?? ''),
-      peso: double.tryParse(_textEditingControllerMap['peso']?.text ?? ''),
-      mobilidade: _textEditingControllerMap['mobilidade']?.text,
-      observacoes: _textEditingControllerMap['observacoes']?.text,
-    );
-  }
-
-  void _showError(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: const TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  Future<void> _saveSinaisVitais() async {
+    // Lógica para salvar os sinais vitais
   }
 }

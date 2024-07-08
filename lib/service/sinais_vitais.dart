@@ -77,6 +77,19 @@ static Future<List<SinaisVitais>> listarSinaisVitais(BuildContext context) async
   }
 }
 
+static Future<void> editarSinaisVitais(BuildContext context, SinaisVitais sinaisVitais) async {
+    try {
+      await _apiClient.put(
+        Uri.parse('$_baseUrl/sinais/${sinaisVitais.id}'),
+        body: sinaisVitais.toJson(),
+        headers: {'Content-Type': 'application/json'},
+      );
+    } catch (e) {
+      print('Erro ao editar sinais vitais: $e');
+      _showError(context, 'Erro ao editar sinais vitais: $e');
+    }
+  }
+
 
 
 

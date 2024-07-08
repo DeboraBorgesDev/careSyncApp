@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:caresync/db/models/paciente.dart';
 
 class SinaisVitais {
-  final String? id;
+  late final String? id;
   final String? idPaciente;
   final String? idProfissional;
   final int? freqCardiaca;

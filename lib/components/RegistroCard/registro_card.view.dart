@@ -1,3 +1,5 @@
+import 'package:caresync/db/models/paciente.dart';
+import 'package:caresync/forms/sinais_vitais_inputs.dart';
 import 'package:flutter/material.dart';
 
 class RegistroCard extends StatefulWidget {
@@ -6,7 +8,6 @@ class RegistroCard extends StatefulWidget {
   const RegistroCard({super.key, required this.registro});
 
   @override
-  // ignore: library_private_types_in_public_api
   _RegistroCardState createState() => _RegistroCardState();
 }
 
@@ -72,7 +73,7 @@ class _RegistroCardState extends State<RegistroCard> {
                 ),
                 FloatingActionButton(
                   onPressed: () {
-                    // Ação para editar o registro
+                    _showEditModal(context, widget.registro);
                   },
                   backgroundColor: const Color.fromARGB(255, 25, 225, 175),
                   mini: true,
@@ -85,4 +86,40 @@ class _RegistroCardState extends State<RegistroCard> {
       ),
     );
   }
+
+void _showEditModal(BuildContext context, Map<String, dynamic> registro) {
+  print(registro);
+  List<String> formatarSinaisVitais(Map<String, dynamic> registro) {
+    return registro['sinaisVitais']
+        .map<String>((sinal) => '${sinal['descricao']}: ${sinal['resultado']}')
+        .toList();
+  }
+
+  List<String> sinaisVitaisFormatted = formatarSinaisVitais(registro);
+
+  Paciente selectedPaciente = Paciente(
+    id: registro['idPaciente'] ?? '',
+    nome: registro['nomePaciente'] ?? '',
+    cpf: registro['cpf'] ?? '',
+    dataNascimento: registro['dataNascimento'] ?? '',
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+        child: FractionallySizedBox(
+          widthFactor: 1.0,
+          heightFactor: 1.0,
+          child: SinaisVitaisInputs(
+            registro: sinaisVitaisFormatted,
+            selectedPaciente: selectedPaciente,
+          ),
+        ),
+      );
+    },
+  );
+}
+
 }

@@ -37,10 +37,8 @@ class _RegistrosContentState extends State<RegistrosContent> {
 }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registros de Sinais Vitais'),
-      ),
+    return AppScaffold(
+      selectedIndex: 1,
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {});
@@ -63,7 +61,10 @@ class _RegistrosContentState extends State<RegistrosContent> {
 
                   return RegistroCard(
                     registro: {
+                      'idPaciente': registro.paciente?.id,
                       'nomePaciente': registro.paciente?.nome ?? 'N/A',
+                      'cpf': registro.paciente?.cpf ?? '',
+                      'dataNascimento': registro.paciente?.dataNascimento ?? '',
                       'dataHora': registro.dataHora != null ? formatDateTime(registro.dataHora!) : 'N/A',                      'sinaisVitais': [
                         {'descricao': 'Pressão Arterial', 'resultado': registro.pressaoArterial ?? 'N/A'},
                         {'descricao': 'Frequência Cardíaca', 'resultado': registro.freqCardiaca?.toString() ?? 'N/A'},

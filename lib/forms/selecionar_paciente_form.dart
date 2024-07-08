@@ -39,12 +39,12 @@ class _SelecionarPacienteState extends State<SelecionarPaciente> {
                     return const Iterable<Paciente>.empty();
                   }
                   return widget.pacientes.where((paciente) {
-                    return paciente.nome
+                    return paciente.nome!
                         .toLowerCase()
                         .contains(textEditingValue.text.toLowerCase());
                   });
                 },
-                displayStringForOption: (paciente) => paciente.nome,
+                displayStringForOption: (paciente) => paciente.nome as String,
                 onSelected: (Paciente? selection) {
                   setState(() {
                     _selectedPaciente = selection;
