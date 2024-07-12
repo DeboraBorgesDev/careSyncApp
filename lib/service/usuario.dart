@@ -10,25 +10,48 @@ class UsuarioService {
   static User? currentUser;
 
   static Future<User?> login(BuildContext context, String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$_baseUrl/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': email,
-        'senha': password,
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'senha': password,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      User user = User.fromJson(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        User user = User.fromJson(jsonDecode(response.body));
 
-      final db = await getDatabase();
-      await UsuarioPersistence().insertUser(db, user);
+        final db = await getDatabase();
+        await UsuarioPersistence().insertUser(db, user);
 
-      currentUser = user;
+        currentUser = user;
+        return user;
+      } else {
+        _showError(context, 'Falha no login: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      // Se a chamada à API falhar, tentar autenticação local
+      final user = await _authenticateLocally(email, password);
+      if (user != null) {
+        currentUser = user;
+        return user;
+      } else {
+        _showError(context, 'Usuário não encontrado localmente');
+        return null;
+      }
+    }
+  }
+
+  static Future<User?> _authenticateLocally(String email, String password) async {
+    final db = await getDatabase();
+    final user = await UsuarioPersistence().getUserByEmail(db, email);
+
+    if (user != null && user.senha == password) {
       return user;
     } else {
-      _showError(context, 'Falha no login: ${response.body}');
       return null;
     }
   }

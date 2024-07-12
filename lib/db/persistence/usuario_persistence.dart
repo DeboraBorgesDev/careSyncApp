@@ -44,6 +44,22 @@ class UsuarioPersistence {
     );
   }
 
+
+  Future<User?> getUserByEmail(Database db, String email) async {
+    final List<Map<String, dynamic>> maps = await db.query(
+      'usuarios',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+
+    if (maps.isNotEmpty) {
+      return User.fromJson(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+
   Future<void> deleteUser(Database db, int id) async {
     await db.delete(
       'usuarios',

@@ -25,10 +25,6 @@ class LoginForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/image1.png',
-            height: 100.0,
-          ),
-          Image.asset(
             'assets/logo.png',
             height: 100.0,
           ),
