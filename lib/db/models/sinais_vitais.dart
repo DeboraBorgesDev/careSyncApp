@@ -124,6 +124,10 @@ class SinaisVitais {
   factory SinaisVitais.fromJsonString(String json) {
     return SinaisVitais.fromJson(jsonDecode(json));
   }
+
+  int compareTo(SinaisVitais other) {
+    return other.dataHora!.compareTo(dataHora!);
+  }
 }
 
 

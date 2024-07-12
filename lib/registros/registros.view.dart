@@ -53,6 +53,18 @@ class _RegistrosContentState extends State<RegistrosContent> {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData && sinaisVitais != null && sinaisVitais.isNotEmpty) {
+              sinaisVitais.sort((a, b) {
+              if (a.dataHora == null && b.dataHora == null) {
+                return 0;
+              } else if (a.dataHora == null) {
+                return 1;
+              } else if (b.dataHora == null) {
+                return -1; 
+              } else {
+                return b.dataHora!.compareTo(a.dataHora!);
+              }
+            });
+
               return ListView.builder(
                 padding: const EdgeInsets.all(16.0),
                 itemCount: sinaisVitais.length,
