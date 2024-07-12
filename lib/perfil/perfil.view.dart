@@ -85,6 +85,7 @@ class PerfilContent extends StatelessWidget {
           padding: const EdgeInsets.all(50.0),
           child: ElevatedButton.icon(
             onPressed: () {
+               Navigator.pushReplacementNamed(context, '/');
             },
             icon: const Icon(Icons.exit_to_app, color: Colors.white),
             label: const  Text(
